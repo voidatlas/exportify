@@ -123,7 +123,7 @@ var PlaylistTable = React.createClass({
                 <th style={{width: "100px"}}>Tracks</th>
                 <th style={{width: "120px"}}>Public?</th>
                 <th style={{width: "120px"}}>Collaborative?</th>
-                <th style={{width: "100px"}} className="text-right"><button className="btn btn-default btn-xs" type="submit" onClick={this.exportPlaylists}><span className="fa fa-file-archive-o"></span> Export All</button></th>
+        <th style={{width: "100px"}} className="text-right"><button className="btn btn-default btn-xs" type="submit" onClick={this.exportPlaylists}><span className="fa fa-file-archive-o"></span> Export All</button><input id="plMin" placeholder="min" /><input id="plMax" placeholder="max" /></th>
               </tr>
             </thead>
             <tbody>
@@ -264,10 +264,7 @@ var PlaylistsExporter = {
           playlists = arguments[0].items
         }
 
-        $(playlists).each(function(i, playlist) {
-          playlistFileNames.push(PlaylistExporter.fileName(playlist));
-          playlistExports.push(PlaylistExporter.csvData(access_token, playlist));
-        });
+      $(playlists).each(function(i, playlist) { var minVal = document.getElementById("plMin").value; var maxVal = document.getElementById("plMax").value; if ((i >= minVal) && (i <= maxVal)) // CSP - test limiting batch saving. 100 seems to be a good number. { playlistFileNames.push(PlaylistExporter.fileName(playlist)); playlistExports.push(PlaylistExporter.csvData(access_token, playlist)); } });
 
         return $.when.apply($, playlistExports);
       }).then(function() {
